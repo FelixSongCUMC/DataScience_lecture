@@ -1,0 +1,111 @@
+---
+title: "Simple document"
+author: Felix Song
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+I'm an R Markdown document! 
+
+# Section 0: Libraries
+```{r echo=F, message=F,}
+library(tidyverse) #can create code block with cmd + opt + I
+```
+
+
+# Section 1
+
+Here's a **code chunk** that samples from 
+a _normal distribution_:
+
+```{r}
+samp = rnorm(100)
+length(samp)
+```
+
+# Section 2
+
+I can take the mean of the sample, too!
+The mean is `r mean(samp)`.
+
+# Section 3
+
+
+```{r} 
+plot_df =
+    tibble(
+        x = rnorm(1000, sd = 0.5),
+        y = 1 + 2*x + rnorm(1000)
+    )
+```
+
+# Section 4: A plot
+
+```{r}
+ggplot(plot_df, aes(x=x)) + geom_histogram()
+ggplot(plot_df, aes(x=x, y=y)) + geom_point()
+```
+
+# Section 5
+
+Write a named code chunk that creates a dataframe comprised of: a numeric variable containing a random sample of size 500 from a normal variable with mean 1; a logical vector indicating whether each sampled value is greater than zero; and a numeric vector containing the absolute value of each element. Then, produce a histogram of the absolute value variable just created. Add an inline summary giving the median value rounded to two decimal places. What happens if you set eval = FALSE to the code chunk? What about echo = FALSE?
+
+```{r}
+df = 
+  tibble(
+    num_var = rnorm(500, mean=1),
+    log_vec = num_var > 0,
+    num_vec = abs(num_var)
+  )
+#df$log_vec
+ggplot(df, aes(x=df$num_vec)) + geom_histogram()
+#Using pull(df, num_vec) doesn't access location of variable, just values. $ does access storage.
+```
+
+
+The mediam is `r round(median(df$num_vec), 2)`
+
+
+# Section 6
+
+This is **bold** or __bold__ and this is _italic_ or *italic*.
+This is `code`
+This is superscript^2^ and subscript~2~
+
+# Header 1
+## Header 2
+### Header 3
+
+* Bullet Item
+  *indented 
+1. Number list 
+
+Table
+--------------
+
+First | Second
+------|--------
+Content | Content
+
+#Section 7
+
+After the previous code chunk, write a bullet list given the mean, median, and standard deviation of the original random sample
+
+* Here is the mean: `r mean(df$num_var)` 
+* Here is the median: `r round(median(df$num_var), 2)`
+* Here is the stdv: `r sd(df$num_var)`
+
+You can also use Latex here: $x = \frac{\Omega} {123}$
+
+
+
+
+
+
+
+
+
+
+
