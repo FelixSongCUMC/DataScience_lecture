@@ -56,3 +56,20 @@ lotr_df
 ```
 
 
+```{r}
+library(haven)
+
+pulse_df = read_sas("data_import_examples/public_pulse_data.sas7bdat")
+pulse_df = janitor::clean_names(pulse_df)
+head(pulse_df, 5)
+```
+
+```{r}
+pups_df_base = read.csv("data_import_examples/FAS_pups.csv")
+pups_df_base
+```
+
+Won't show: lazy about variable names and slow for big datasets
+
+
+
