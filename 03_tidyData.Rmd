@@ -1,0 +1,142 @@
+---
+title: "03_tidyData"
+output: html_document
+date: "2026-09-29"
+---
+
+```{r}
+library(tidyverse)
+```
+
+# Lets tidy some data
+
+```{r}
+pulse_df = 
+  haven::read_sas("data_import_examples/public_pulse_data.sas7bdat") |> 
+  janitor::clean_names()
+```
+
+Now, to help improve/tidy the data,
+
+```{r}
+pulse_tidy_df =
+  pulse_df |> 
+  pivot_longer(
+    bdi_score_bl:bdi_score_12m,
+    names_to="visit",
+    names_prefix = "bdi_score_",
+    values_to = "bdi_score"
+    ) |> 
+  mutate(
+    visit=replace(visit, visit == "bl", "00m")
+  )
+```
+
+You can also do this in one line as well!
+
+
+Now, lets pracitce importing litters data, keeping the columns litter number and GD weights, and tidy.
+
+
+
+```{r}
+litters_df = 
+  read_csv("data_import_examples/FAS_litters.csv", na = c("NA", "", ".")) |> 
+  janitor::clean_names() |> 
+  select(litter_number, gd0_weight, gd18_weight) |> 
+  pivot_longer(
+    gd0_weight:gd18_weight,
+    names_to = "gd",
+    values_to = "weight"
+  ) |> 
+  mutate(
+    gd = case_match(
+      gd, 
+      "gd0_weight" ~ 0,
+      "gd18_weight" ~ 18,
+    )
+  )
+
+
+litters_df
+```
+
+## Deliberately untidy data
+
+```{r}
+analysis_df = 
+  tibble(
+    group = c("treatment", "treatment", "placebo", "placebo"),
+    time = c("pre", "post", "pre", "post"),
+    mean = c(4, 8, 3.5, 4)
+  )
+
+analysis_df
+```
+
+Let's untidy this dataset for human readibility.
+
+```{r}
+analysis_df |> 
+  pivot_wider(
+    names_from = "time",
+    values_from = "mean"
+  ) |> 
+  knitr::kable()
+```
+
+```{r}
+fellowship_df = 
+  readxl::read_excel("./data_import_examples//LotR_Words.xlsx", range = "B3:D6") |>
+  mutate(movie = "fellowship")
+
+two_tower_df = 
+  readxl::read_excel("./data_import_examples//LotR_Words.xlsx", range = "F3:H6") |>
+  mutate(movie = "Two Towers")
+
+return_df = 
+  readxl::read_excel("./data_import_examples//LotR_Words.xlsx", range = "J3:L6") |>
+  mutate(movie = "Return of the king")
+
+```
+
+
+Next, we put these together and tidy
+
+```{r}
+lotr_df = 
+  bind_rows(fellowship_df, two_tower_df, return_df) |> 
+  janitor::clean_names() |> 
+  relocate(movie) |> 
+  pivot_longer(
+    female:male,
+    names_to = "gender",
+    values_to = "words"
+  )
+
+lotr_df
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
