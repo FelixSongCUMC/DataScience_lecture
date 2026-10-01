@@ -1,6 +1,6 @@
 ---
-title: "03_tidyData"
-output: html_document
+title: "04_dataVis"
+output: github_document
 date: "2026-09-29"
 ---
 
@@ -13,14 +13,71 @@ data("weather_df")
 
 ```
 
+Making a simple scatter plot: 
+
+```{r}
+ggplot(weather_df, aes(x = tmin, y = tmax)) + geom_point()
+```
 
 
+We can also use the ggplot function after creation of the dataframem and we can save the plots as well.
 
+```{r}
+ggp_temp_scatterplot =
+  weather_df |> 
+    ggplot(aes(x=tmin, y=tmax)) +
+    geom_point()
 
+ggp_temp_scatterplot
+```
 
+We can make this a little nicer:
 
+```{r}
+weather_df |> 
+  ggplot(aes(x=tmin, y=tmax)) +
+  geom_point(aes(color=name), alpha=0.25) + #opacity
+  geom_smooth(se = FALSE) #Smooth lines, Show Standard Error False
 
+#If we move color to point, then the geom_smooth will go through all datapoints instead of separating.
+#You can remove the point if you just want a curve
+```
 
+Moving to faceting
+
+```{r}
+weather_df |> 
+  ggplot(aes(x=tmin, y=tmax, color=name)) +
+  geom_point(alpha=0.5) + 
+  #facet_grid(. ~ name) #this is saying where we want the variables go
+  #facet_grid(name ~ .)
+#The second term (name) decides how we want to column separate and the first term row separates.
+  facet_grid(cols=vars(name))
+```
+
+Let's look at other data:
+
+```{r}
+weather_df |> 
+  ggplot(aes(x = date, y = tmax, color = name)) + 
+  geom_point(aes(size = prcp), alpha = .5) +
+  geom_smooth(se = FALSE) + 
+  facet_grid(. ~ name)
+  
+```
+
+Make a plot of central park tmax v  tmin only, and convert temperatures to fahrenheit
+
+```{r}
+
+weather_df |> 
+  filter(name == "CentralPark_NY") |> 
+  mutate(
+    tmax = tmax* 9/5 + 32,
+    tmin = tmin* 9/5 + 32 ) |> 
+  ggplot(aes(x=tmin, y=tmax)) + 
+  geom_point()
+```
 
 
 
