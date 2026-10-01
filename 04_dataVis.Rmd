@@ -1,0 +1,37 @@
+---
+title: "03_tidyData"
+output: html_document
+date: "2026-09-29"
+---
+
+Import necessary Libraries
+```{r}
+library(tidyverse)
+library(ggridges)
+library(p8105.datasets)
+data("weather_df")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
